@@ -1,0 +1,8 @@
+nucleotideCreator: multinomial
+nucleotideCreationLimit:
+  MaxAddedNucleotides: 100
+  MaxNucleotidesInPond: 100000
+singleStrandCreator: growing
+singleStrandCreationLimit:
+  NucleotidesToConsume: 100
+  MaxAddedStrands: 20

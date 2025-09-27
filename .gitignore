@@ -1,0 +1,26 @@
+# build artifacts
+bin/
+obj/
+TestResults/
+*.nupkg
+*.log
+
+# IDE
+.vs/
+*.user
+*.suo
+.idea/
+.ReSharper*/
+_ReSharper.Caches/
+.vscode/
+
+# OS junk
+*.DS_Store
+Thumbs.db
+
+# experiments / local config
+experiments/
+results/
+*.local.yaml
+*.secrets.yaml
+.env

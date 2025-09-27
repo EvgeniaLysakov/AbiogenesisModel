@@ -1,0 +1,9 @@
+nucleotideCreator:
+  typeKey: multinomial
+  config: no
+nucleotideCreationLimit:
+  MaxNucleotidesInPond: 5000
+
+MultinomialNucleotideCreator:
+  A: 1
+  U: 3

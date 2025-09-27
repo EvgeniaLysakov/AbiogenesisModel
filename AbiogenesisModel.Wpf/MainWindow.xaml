@@ -1,0 +1,49 @@
+﻿<Window x:Class="AbiogenesisModel.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:spwpf="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+        xmlns:core="clr-namespace:AbiogenesisModel.Core;assembly=AbiogenesisModel.Core"
+        Title="Abiogenesis Model" Height="650" Width="1000">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Панель управления -->
+        <StackPanel Grid.Column="0" Margin="12" VerticalAlignment="Stretch">
+            <!--<TextBlock Text="Панель" FontWeight="SemiBold" Margin="0,0,0,8"/>
+            <TextBox x:Name="Txt" AcceptsReturn="True" Height="120" TextWrapping="Wrap"/>
+            <CheckBox x:Name="Chk" Content="Флажок" Margin="0,8,0,4"/>
+            <Button Content="Добавить текст" Margin="0,8,0,0" Click="AddText_Click"/>-->
+            <Button Content="Loop" Margin="0,8,0,0" Click="Loop_Click"/>
+        </StackPanel>
+
+        <!-- Лента (текст + графики вперемешку) -->
+        <ScrollViewer Grid.Column="1" Margin="12" VerticalScrollBarVisibility="Auto" x:Name="FeedScroll">
+            <ItemsControl ItemsSource="{Binding Feed}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.Resources>
+                    <!-- Текстовый блок -->
+                    <DataTemplate DataType="{x:Type core:TextItem}">
+                        <Border Margin="0,0,0,10" Padding="10" Background="#0F000000" CornerRadius="8">
+                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"/>
+                        </Border>
+                    </DataTemplate>
+
+                    <!-- График ScottPlot -->
+                    <DataTemplate DataType="{x:Type core:PlotItem}">
+                        <Border Margin="0,0,0,10" Padding="10" Background="#0F000000" CornerRadius="8">
+                            <spwpf:WpfPlot x:Name="Plot" Height="280" Loaded="Plot_Loaded"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>
