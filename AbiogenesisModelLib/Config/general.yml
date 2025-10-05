@@ -1,8 +1,6 @@
-nucleotideCreator: multinomial
-nucleotideCreationLimit:
-  MaxAddedNucleotides: 100
-  MaxNucleotidesInPond: 100000
-singleStrandCreator: growing
-singleStrandCreationLimit:
-  NucleotidesToConsume: 100
-  MaxAddedStrands: 20
+#names (w/o extension) of config files to be loaded
+ConfigKeys:
+    AbiogenesisCycleConfig: default #Config/Cycle/
+    MultinomialNucleotideCreatorConfig: default #Config/NucleotideCreator/
+    MultinomialSingleStrandCreatorConfig: default #Config/SingleStrandCreator/Growing/
+    GrowingSingleStrandCreatorConfig: default #Config/SingleStrandCreator/Multinomial/

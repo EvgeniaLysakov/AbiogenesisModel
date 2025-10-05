@@ -6,7 +6,11 @@
 
     public abstract record PlotItem(string? Title = null, string? XTitle = null, string? YTitle = null) : IStreamItem;
 
-    public sealed record LinePlotItem(double[] X, double[] Y) : PlotItem;
+    public sealed record LineData((double X, double Y)[] Dots, string? Legend = null);
 
-    public sealed record BarPlotItem((string Label, double Value)[] Bars) : PlotItem;
+    public sealed record LinePlotItem(LineData[] Lines) : PlotItem;
+
+    public sealed record BarPlotItem((double X, double Value)[] Bars) : PlotItem;
+
+    public sealed record LabeledBarPlotItem((string X, double Value)[] Bars) : PlotItem;
 }

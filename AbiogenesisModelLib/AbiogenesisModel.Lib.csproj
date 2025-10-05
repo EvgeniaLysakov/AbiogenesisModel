@@ -11,20 +11,29 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Config\Cycle\" />
+    <Folder Include="Config\NucleotideCreator\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Config\Cycle\default.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Config\general.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\GrowingSingleStrandCreator.yml">
+    <None Update="Config\NucleotideCreator\default.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\MultinomialSingleStrandCreator.yml">
+    <None Update="Config\SingleStrandCreator\Growing\default.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\MultinomialNucleotideCreator.yml">
+    <None Update="Config\SingleStrandCreator\Multinomial\default.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

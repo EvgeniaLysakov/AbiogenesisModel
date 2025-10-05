@@ -1,0 +1,8 @@
+Probabilities: # Probabilities of nucleobases, will be normalized if they don't sum to 1. {A, U, G, C}: positive real number
+  A: 0.25
+  U: 0.25
+  G: 0.25
+  C: 0.25
+#Limits: at least one of them must be specified
+MaxAddedNucleotides: 10 # Maximum number of nucleotides to add during each loop. Positive integer
+#MaxNucleotidesInPond: 5000 # Maximum number of nucleotides allowed in the pond. Positive integer

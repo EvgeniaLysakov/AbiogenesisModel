@@ -1,11 +1,26 @@
 ﻿using AbiogenesisModel.Lib;
+using AbiogenesisModel.Lib.Pipeline;
+using AbiogenesisModel.Lib.Steps.NucleotideCreators;
+using AbiogenesisModel.Lib.Steps.SingleStrandCreators;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
+using AbiogenesisModel.Lib.Steps;
 
 namespace AbiogenesisModel.Core
 {
     public sealed class MainVm
     {
-        private readonly AbiogenesisSite _site = new AbiogenesisSite();
+        private readonly ServiceProvider _provider;
+
+        public MainVm()
+        {
+            var services = new ServiceCollection();
+            services.RegisterDefaultGeneralConfig();
+            services.RegisterConfigs();
+            services.RegisterServices();
+
+            _provider = services.BuildServiceProvider();
+        }
 
         private int _feedLimit;
 
@@ -26,17 +41,41 @@ namespace AbiogenesisModel.Core
             }
         }
 
-        public void LoopAndBars()
+        public void Run()
         {
-            var stats = _site.Loop();
+            var vals = new Dictionary<int, double[]>();
+            var lowerLimit = 10;
+            var count = 100;
+            for (var i = lowerLimit; i < lowerLimit + count; i++)
+            {
+                var site = _provider.GetRequiredService<AbiogenesisSite>();
+                site.Pond.Clear();
 
-            Feed.Add(new BarPlotItem(stats.SelectMany(stat => stat.ToBarPlotData()).Concat([
-                ("Total nucleotides",_site.Pond.NucleotideCount),
-                ("Free nucleotides",_site.Pond.FreeNucleotides.Length),
-                ("Total single strands",_site.Pond.SingleStrandCount),
-                ("Free single strands",_site.Pond.FreeStrands.Length),
-                ("Total multi strands",_site.Pond.MultiStrandCount)
-            ]).Concat(_site.Pond.AllStrands.GroupBy(strand => strand.Count).Select(group => ($"SingleStrand#{group.Key}", (double)group.Count()))).ToArray()));
+                var j = i;
+                var nucConfig = ((MultinomialNucleotideCreator)site.AbiogenesisCycle.NucleotideCreator).Configuration;
+                var strandConfig = ((GrowingSingleStrandCreator)site.AbiogenesisCycle.SingleStrandCreator).Configuration;
+                nucConfig.MaxNucleotidesInPond = 10000;
+                nucConfig.MaxAddedNucleotides = i;
+                strandConfig.MaxLigationEvents = null;
+                strandConfig.NucleotidesToConsume = null;
+                strandConfig.MaxAddedStrands = 10;
+                StepStat[] stat;
+                do
+                {
+                    stat = site.Loop();
+                }
+                while (/*site.Pond.FreeNucleotides.Any()*/ stat.OfType<NucleotideCreationStat>().First().AddedNucleotides > 0);
+
+                var strandCounts = site.Pond.AllStrands.Select(strand => strand.Count).ToArray();
+                vals.Add(j, [strandCounts.Average(), strandCounts.Max()]);
+            }
+
+            var keyPairs = vals.OrderBy(kv => kv.Key).ToArray();
+
+            Feed.Add(new LinePlotItem([
+                new LineData(keyPairs.Select(pair => ((double)pair.Key, pair.Value[0])).ToArray(), "Average length"),
+                new LineData(keyPairs.Select(pair => ((double)pair.Key, pair.Value[1])).ToArray(), "Max length")]));
+
             LimitFeed();
         }
 

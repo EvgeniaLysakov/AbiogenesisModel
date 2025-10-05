@@ -1,19 +1,17 @@
 ﻿using AbiogenesisModel.Lib.DataTypes;
 
-namespace AbiogenesisModel.Lib.Steps
+namespace AbiogenesisModel.Lib.Steps;
+
+public interface IStep<out T>
+    where T : StepStat
 {
-    public interface IStep
-    {
-        void ValidateAndInit();
-    }
+    T Execute(Pond pond);
+}
 
-    public interface INucleotideCreator : IStep
-    {
-        NucleotideCreationStat Create(NucleotideCreationLimit limit, Pond pond);
-    }
+public interface INucleotideCreator : IStep<NucleotideCreationStat>
+{
+}
 
-    public interface ISingleStrandCreator : IStep
-    {
-        SingleStrandCreationStat Create(SingleStrandCreationLimit limit, Pond pond);
-    }
+public interface ISingleStrandCreator : IStep<SingleStrandCreationStat>
+{
 }

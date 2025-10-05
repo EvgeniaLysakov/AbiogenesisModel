@@ -1,0 +1,3 @@
+# Steps implementations to be loaded
+NucleotideCreator: multinomial # {default, multinomial}
+SingleStrandCreator: growing # {default, multinomial, growing}

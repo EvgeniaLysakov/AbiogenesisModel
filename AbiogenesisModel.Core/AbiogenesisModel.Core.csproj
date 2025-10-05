@@ -10,4 +10,14 @@
     <ProjectReference Include="..\AbiogenesisModelLib\AbiogenesisModel.Lib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\Runner\LimitRange\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Config\Runner\LimitRange\default.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

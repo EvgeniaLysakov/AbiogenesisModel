@@ -1,0 +1,5 @@
+ActivateAllStrandsInPond: true # Whether to activate all strands in the pond at the start of the step. Boolean
+#Limits: at least one of them must be specified
+MaxAddedStrands: 10 # Maximum number of new strands to add during each loop. Positive integer
+#MaxLigationEvents: 10 # Maximum number of ligation events to perform during each loop. Positive integer
+#NucleotidesToConsume: 10 # Number of nucleotides to consume for ligation. Positive integer

@@ -1,43 +1,46 @@
-﻿using AbiogenesisModel.Lib.Configurability;
-using AbiogenesisModel.Lib.DataTypes;
+﻿using AbiogenesisModel.Lib.DataTypes;
+using AbiogenesisModel.Lib.Pipeline;
 using AbiogenesisModel.Lib.Steps;
-using Microsoft.Extensions.Configuration;
 
-namespace AbiogenesisModel.Lib
+namespace AbiogenesisModel.Lib;
+
+[Service]
+public class AbiogenesisCycle : ConfigurableObject<AbiogenesisCycleConfig>
 {
-    public class AbiogenesisCycle : ConfigurableObject
+    public AbiogenesisCycle(IKeyedFactory<INucleotideCreator> nucleotideCreatorFactory,
+                            IKeyedFactory<ISingleStrandCreator> singleStrandCreatorFactory,
+                            IConfigFactory<AbiogenesisCycleConfig> configFactory)
+        : base(configFactory)
     {
-        public AbiogenesisCycle()
-        {
-        }
+        NucleotideCreator = nucleotideCreatorFactory.Get(Configuration.NucleotideCreator);
+        SingleStrandCreator = singleStrandCreatorFactory.Get(Configuration.SingleStrandCreator);
+    }
 
-        public AbiogenesisCycle(IConfiguration config)
-            : base(config)
-        {
-        }
+    public INucleotideCreator NucleotideCreator { get; }
 
-        [Configurable("nucleotideCreator")]
-        public INucleotideCreator NucleotideCreator { get; internal set; } = null!;
+    public ISingleStrandCreator SingleStrandCreator { get; }
 
-        [Configurable("nucleotideCreationLimit")]
-        public NucleotideCreationLimit NucleotideCreationLimit { get; internal set; } = null!;
+    public StepStat[] Loop(Pond pond)
+    {
+        var stats = new List<StepStat>();
+        StepStat stat = NucleotideCreator.Execute(pond);
+        stats.Add(stat);
 
-        [Configurable("singleStrandCreator")]
-        public ISingleStrandCreator SingleStrandCreator { get; internal set; } = null!;
+        stat = SingleStrandCreator.Execute(pond);
+        stats.Add(stat);
 
-        [Configurable("singleStrandCreationLimit")]
-        public SingleStrandCreationLimit SingleStrandCreationLimit { get; internal set; } = null!;
+        return stats.ToArray();
+    }
+}
 
-        public StepStat[] Loop(Pond pond)
-        {
-            var stats = new List<StepStat>();
-            StepStat stat = NucleotideCreator.Create(NucleotideCreationLimit, pond);
-            stats.Add(stat);
+[Config("Cycle")]
+public class AbiogenesisCycleConfig : ICloneable
+{
+    public string NucleotideCreator { get; init; } = "default";
+    public string SingleStrandCreator { get; init; } = "default";
 
-            stat = SingleStrandCreator.Create(SingleStrandCreationLimit, pond);
-            stats.Add(stat);
-
-            return stats.ToArray();
-        }
+    public object Clone()
+    {
+        return new AbiogenesisCycleConfig() { NucleotideCreator = NucleotideCreator, SingleStrandCreator = SingleStrandCreator };
     }
 }

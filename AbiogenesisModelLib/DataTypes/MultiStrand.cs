@@ -1,6 +1,5 @@
-﻿namespace AbiogenesisModel.Lib.DataTypes
+﻿namespace AbiogenesisModel.Lib.DataTypes;
+
+public class MultiStrand
 {
-    public class MultiStrand
-    {
-    }
 }

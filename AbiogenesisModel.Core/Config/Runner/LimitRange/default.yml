@@ -1,0 +1,10 @@
+Start: 1 # Inclusive. Positive integer
+Count: 100 # Positive integer
+Repeats: 10 # Positive integer
+Limits: # at least one of them must be specified
+  - Name: MaxAddedNucleotides
+    Factor: 5
+    Offset: 0
+  - Name: MaxAddedStrands
+    Factor: 1
+    Offset: 0

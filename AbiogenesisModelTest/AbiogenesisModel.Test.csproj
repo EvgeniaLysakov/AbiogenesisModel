@@ -24,10 +24,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestData\Config\generalInlined1.yml">
+    <None Update="Config\Cycle\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\Config\generalInlined2.yml">
+    <None Update="Config\test.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\NucleotideCreator\test.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\SingleStrandCreator\Growing\test.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\SingleStrandCreator\Multinomial\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

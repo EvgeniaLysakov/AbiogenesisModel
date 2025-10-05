@@ -65,26 +65,41 @@ namespace AbiogenesisModel.Wpf
             switch (plotItem)
             {
                 case LinePlotItem line:
+                    FillPlotTitles(ctrl.Plot, line);
                     FillPlotData(ctrl.Plot, line);
                     break;
                 case BarPlotItem bar:
+                    FillPlotTitles(ctrl.Plot, bar);
                     FillPlotData(ctrl.Plot, bar);
                     break;
+                case LabeledBarPlotItem labeledBar:
+                    FillPlotTitles(ctrl.Plot, labeledBar);
+                    FillPlotData(ctrl.Plot, labeledBar);
+                    break;
             }
+
+            ctrl.Plot.Axes.AutoScale();
 
             ctrl.Refresh();
         }
 
-        private static void FillPlotData(Plot plot, BarPlotItem barPlotItem)
+        private static void FillPlotTitles(Plot plot, PlotItem plotItem)
+        {
+            plot.Title(plotItem.Title ?? string.Empty);
+            plot.XLabel(plotItem.XTitle ?? string.Empty);
+            plot.YLabel(plotItem.YTitle ?? string.Empty);
+        }
+
+        private static void FillPlotData(Plot plot, LabeledBarPlotItem barPlotItem)
         {
             var ticks = new List<Tick>();
             for (var i = 0; i < barPlotItem.Bars.Length; i++)
             {
-                var (label, val) = barPlotItem.Bars[i];
-                var barPlot = plot.Add.Bar(i + 1, val);
+                var (label, y) = barPlotItem.Bars[i];
+                var barPlot = plot.Add.Bar(i + 1, y);
                 foreach (var bar in barPlot.Bars)
                 {
-                    bar.Label = bar.Value.ToString(CultureInfo.InvariantCulture);
+                    bar.Label = bar.Value.ToString("0.###", CultureInfo.InvariantCulture);
                 }
 
                 ticks.Add(new Tick(i + 1, label));
@@ -95,14 +110,43 @@ namespace AbiogenesisModel.Wpf
             plot.Axes.Bottom.TickGenerator = new NumericManual(ticks.ToArray());
         }
 
-        private static void FillPlotData(Plot plot, LinePlotItem linePlotItem)
+        private static void FillPlotData(Plot plot, BarPlotItem barPlotItem)
         {
-            plot.Add.Scatter(linePlotItem.X, linePlotItem.Y);
+            foreach (var (x, y) in barPlotItem.Bars)
+            {
+                var barPlot = plot.Add.Bar(x, y);
+                foreach (var bar in barPlot.Bars)
+                {
+                    bar.Label = bar.Value.ToString("0.###", CultureInfo.InvariantCulture);
+                }
+            }
+
+            plot.Axes.Margins(bottom: 0);
         }
 
-        private void Loop_Click(object sender, RoutedEventArgs e)
+        private static void FillPlotData(Plot plot, LinePlotItem linePlotItem)
         {
-            Vm.LoopAndBars();
+            var showLegend = false;
+            foreach (var line in linePlotItem.Lines)
+            {
+                var scatter = plot.Add.Scatter(line.Dots.Select(p => p.X).ToArray(), line.Dots.Select(p => p.Y).ToArray());
+
+                if (!string.IsNullOrEmpty(line.Legend))
+                {
+                    scatter.LegendText = line.Legend;
+                    showLegend = true;
+                }
+            }
+
+            if (showLegend)
+            {
+                plot.ShowLegend(Alignment.UpperRight);
+            }
+        }
+
+        private void Run_Click(object sender, RoutedEventArgs e)
+        {
+            Vm.Run();
         }
     }
 }
