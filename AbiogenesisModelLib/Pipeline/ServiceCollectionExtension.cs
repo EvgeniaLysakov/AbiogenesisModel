@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AbiogenesisModel.Lib.Attributes;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -7,7 +8,9 @@ namespace AbiogenesisModel.Lib.Pipeline;
 
 public static class ServiceCollectionExtensions
 {
-    public static void RegisterServices(this IServiceCollection services)
+    private static readonly IDeserializer Deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
+
+    public static void RegisterLibServices(this IServiceCollection services)
     {
         services.RegisterServices(Assembly.GetExecutingAssembly());
     }
@@ -22,34 +25,27 @@ public static class ServiceCollectionExtensions
         foreach (var type in types)
         {
             var attr = type.GetCustomAttribute<ServiceAttribute>()!;
-            var interfaces = type.GetInterfaces();
-            foreach (var i in interfaces)
+            var serviceTypes = type.GetInterfaces().Concat([type]);
+            foreach (var serviceType in serviceTypes)
             {
                 ServiceDescriptor descriptor;
                 if (attr is NamedServiceAttribute namedAttr)
                 {
-                    descriptor = new ServiceDescriptor(i, namedAttr.Key, type, namedAttr.Lifetime);
+                    descriptor = new ServiceDescriptor(serviceType, namedAttr.Key, type, namedAttr.Lifetime);
                 }
                 else
                 {
-                    descriptor = new ServiceDescriptor(i, type, attr.Lifetime);
+                    descriptor = new ServiceDescriptor(serviceType, type, attr.Lifetime);
                 }
 
-                services.Add(descriptor);
-            }
-
-            if (!interfaces.Any())
-            {
-                var descriptor = new ServiceDescriptor(type, type, attr.Lifetime);
                 services.Add(descriptor);
             }
         }
     }
 
-    public static void RegisterDefaultGeneralConfig(this IServiceCollection services)
+    public static void RegisterGeneralConfigFromFile(this IServiceCollection services)
     {
-        var path = "config\\general.yml";
-        services.RegisterGeneralConfigFromFile(path);
+        services.RegisterGeneralConfigFromFile(Constants.GeneralConfigPath);
     }
 
     public static void RegisterGeneralConfigFromFile(this IServiceCollection services, string path)
@@ -64,12 +60,14 @@ public static class ServiceCollectionExtensions
 
         var configFactoryType = typeof(ConfigFactory);
         var instance = deserializer.Deserialize(yaml, configFactoryType);
-        if (instance == null)
-        {
-            throw new InvalidOperationException($"Failed to deserialize general options from file 'general.yml'");
-        }
 
-        services.Add(new ServiceDescriptor(configFactoryType, instance));
+        services.Add(new ServiceDescriptor(configFactoryType, instance!));
+    }
+
+    public static void RegisterDefaultGeneralConfig(this IServiceCollection services)
+    {
+        var configFactoryType = typeof(ConfigFactory);
+        services.Add(new ServiceDescriptor(configFactoryType, new ConfigFactory() { ConfigKeys = new Dictionary<string, string>() }));
     }
 
     public static void RegisterConfigs(this IServiceCollection services)
@@ -79,33 +77,53 @@ public static class ServiceCollectionExtensions
 
     public static void RegisterConfigs(this IServiceCollection services, Assembly assembly)
     {
-        var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
-
         var types = assembly.GetTypes().Where(t => t.GetCustomAttribute<ConfigAttribute>() != null);
 
         foreach (var type in types)
         {
             var attr = type.GetCustomAttribute<ConfigAttribute>()!;
-            var configDir = $"config\\{attr.DirectoryName ?? type.Name}";
+            var configDir = string.Format(Constants.ConfigDirFormat, attr.DirectoryName ?? type.Name);
             if (!Directory.Exists(configDir))
             {
-                throw new DirectoryNotFoundException($"The configuration directory '{configDir}' for options type '{type.FullName}' was not found.");
+                services.TryRegisterEmptyConfig(type);
+                continue;
             }
 
-            foreach (var path in Directory.EnumerateFiles(configDir, "*.yml"))
+            foreach (var path in Directory.EnumerateFiles(configDir, Constants.YmlFilesPattern))
             {
                 var yaml = File.ReadAllText(path);
-                var instance = deserializer.Deserialize(yaml, type);
-
-                if (instance == null)
-                {
-                    throw new InvalidOperationException($"Failed to deserialize options from file '{path}' to type '{type.FullName}'");
-                }
-
                 var key = Path.GetFileNameWithoutExtension(path);
 
-                services.Add(new ServiceDescriptor(type, key, instance));
+                services.TryRegisterConfigFromYaml(type, yaml, key);
             }
         }
+    }
+
+    public static bool TryRegisterConfigFromYaml(this IServiceCollection services, Type type, string yaml, string key)
+    {
+        var instance = Deserializer.Deserialize(yaml, type);
+
+        if (instance == null)
+        {
+            return false;
+        }
+
+        services.Add(new ServiceDescriptor(type, key, instance));
+        return true;
+
+    }
+
+    public static bool TryRegisterEmptyConfig(this IServiceCollection services, Type type)
+    {
+        var instance = Activator.CreateInstance(type);
+
+        if (instance == null)
+        {
+            return false;
+        }
+
+        services.Add(new ServiceDescriptor(type, Constants.DefaultKey, instance));
+        return true;
+
     }
 }

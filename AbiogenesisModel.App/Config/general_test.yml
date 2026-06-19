@@ -1,0 +1,6 @@
+#names (w/o extension) of config files to be loaded
+ConfigKeys:
+    SimulationWorldControllerConfig: default #Config/SimulationWorldController/
+    ExternalEnvironmentControllerConfig: default #Config/ExternalEnvironmentController/
+    PondControllerConfig: default #Config/PondController/
+    SimpleThrowInEventConfig: default #Config/SimpleThrowInEvent/

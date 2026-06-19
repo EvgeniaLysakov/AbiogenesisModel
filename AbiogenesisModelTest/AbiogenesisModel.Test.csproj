@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
     <PackageReference Include="FluentAssertions" Version="8.6.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
@@ -24,19 +25,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Config\Cycle\test.yml">
+    <Folder Include="Config\ExternalEnvironmentController\" />
+    <Folder Include="Config\SimpleThrowInEvent\" />
+    <Folder Include="Config\PondController\" />
+    <Folder Include="Config\SimulationWorldController\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Config\ExternalEnvironmentController\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\test.yml">
+    <None Update="Config\general_test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\NucleotideCreator\test.yml">
+    <None Update="Config\PondController\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\SingleStrandCreator\Growing\test.yml">
+    <None Update="Config\SimpleThrowInEvent\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Config\SingleStrandCreator\Multinomial\test.yml">
+    <None Update="Config\SimulationWorldController\test.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

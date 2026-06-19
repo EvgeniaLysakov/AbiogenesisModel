@@ -12,6 +12,6 @@ public sealed class KeyedFactory<T>(IServiceProvider sp) : IKeyedFactory<T>
 {
     public T Get(object? key)
     {
-        return sp.GetRequiredKeyedService<T>(key ?? "default");
+        return sp.GetRequiredKeyedService<T>(key ?? Constants.DefaultKey);
     }
 }

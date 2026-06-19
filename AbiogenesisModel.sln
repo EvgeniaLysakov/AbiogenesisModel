@@ -5,16 +5,11 @@ VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.Lib", "AbiogenesisModelLib\AbiogenesisModel.Lib.csproj", "{2039B65E-87EE-4609-A9A7-93BDB695CDFE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.Test", "AbiogenesisModelTest\AbiogenesisModel.Test.csproj", "{D78CF5A5-33F6-4A9B-9D13-10E0CCDE9DE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.Core", "AbiogenesisModel.Core\AbiogenesisModel.Core.csproj", "{80BF3E20-6301-45FD-B991-B365643768F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.Telemetry", "AbiogenesisModel.Telemetry\AbiogenesisModel.Telemetry.csproj", "{2B9C2AED-70F9-4B61-93C8-ECCE8C81DA97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.Wpf", "AbiogenesisModel.Wpf\AbiogenesisModel.Wpf.csproj", "{EBAD8956-972E-493B-9749-94E5F9BECB34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbiogenesisModel.App", "AbiogenesisModel.App\AbiogenesisModel.App.csproj", "{A3E2059A-4AFF-4F81-9E04-B57C935AE68E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,14 +25,14 @@ Global
 		{D78CF5A5-33F6-4A9B-9D13-10E0CCDE9DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D78CF5A5-33F6-4A9B-9D13-10E0CCDE9DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D78CF5A5-33F6-4A9B-9D13-10E0CCDE9DE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80BF3E20-6301-45FD-B991-B365643768F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80BF3E20-6301-45FD-B991-B365643768F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80BF3E20-6301-45FD-B991-B365643768F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80BF3E20-6301-45FD-B991-B365643768F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EBAD8956-972E-493B-9749-94E5F9BECB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EBAD8956-972E-493B-9749-94E5F9BECB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EBAD8956-972E-493B-9749-94E5F9BECB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EBAD8956-972E-493B-9749-94E5F9BECB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B9C2AED-70F9-4B61-93C8-ECCE8C81DA97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9C2AED-70F9-4B61-93C8-ECCE8C81DA97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9C2AED-70F9-4B61-93C8-ECCE8C81DA97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9C2AED-70F9-4B61-93C8-ECCE8C81DA97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3E2059A-4AFF-4F81-9E04-B57C935AE68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3E2059A-4AFF-4F81-9E04-B57C935AE68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3E2059A-4AFF-4F81-9E04-B57C935AE68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3E2059A-4AFF-4F81-9E04-B57C935AE68E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

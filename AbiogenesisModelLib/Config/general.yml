@@ -1,6 +1,0 @@
-#names (w/o extension) of config files to be loaded
-ConfigKeys:
-    AbiogenesisCycleConfig: default #Config/Cycle/
-    MultinomialNucleotideCreatorConfig: default #Config/NucleotideCreator/
-    MultinomialSingleStrandCreatorConfig: default #Config/SingleStrandCreator/Growing/
-    GrowingSingleStrandCreatorConfig: default #Config/SingleStrandCreator/Multinomial/

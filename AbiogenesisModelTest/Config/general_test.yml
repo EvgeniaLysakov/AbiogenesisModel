@@ -1,0 +1,6 @@
+#names (w/o extension) of config files to be loaded
+ConfigKeys:
+    SimulationWorldControllerConfig: test #Config/SimulationWorldController/
+    ExternalEnvironmentControllerConfig: test #Config/ExternalEnvironmentController/
+    PondControllerConfig: test #Config/PondController/
+    SimpleThrowInEventConfig: test #Config/SimpleThrowInEvent/

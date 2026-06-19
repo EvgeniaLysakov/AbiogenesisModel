@@ -18,6 +18,6 @@ public sealed class ConfigFactory<T>(IServiceProvider sp, ConfigFactory configFa
     public T Get()
     {
         configFactory.ConfigKeys.TryGetValue(typeof(T).Name, out var key);
-        return sp.GetRequiredKeyedService<T>(key ?? "default");
+        return sp.GetRequiredKeyedService<T>(key ?? Constants.DefaultKey);
     }
 }

@@ -1,0 +1,14 @@
+NucleobaseProbabilities:
+  A: 0.05
+  U: 0.45
+  G: 0.15
+  C: 0.35
+StrandLengthProbabilities:
+  1: 0.05
+  2: 0.15
+  3: 0.25
+  4: 0.25
+  5: 0.15
+  6: 0.05
+StrandsPerEventAverage: 1000
+StrandsPerEventVariance: 100
