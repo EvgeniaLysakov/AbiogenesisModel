@@ -1,7 +1,13 @@
 ﻿<Window
     x:Class="AbiogenesisModel.App.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:app="clr-namespace:AbiogenesisModel.App"
+    xmlns:chrt="clr-namespace:AbiogenesisModel.App.Chart"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=app:MainViewModel}"
     Title="Abiogenesis Simulation"
     Width="1400"
     Height="900"
@@ -146,17 +152,11 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <TextBlock Text="Strand length distribution" FontWeight="SemiBold" Margin="0,0,0,12"/>
-                                <TextBlock Text="[Chart placeholder]" Foreground="#777"/>
-                            </StackPanel>
+                            <chrt:ChartWrapper ChartViewModel="{Binding StrandLengthDistributionChart}"/>
                         </Border>
 
                         <Border Grid.Column="2" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="12">
-                            <StackPanel>
-                                <TextBlock Text="Population by stratum" FontWeight="SemiBold" Margin="0,0,0,12"/>
-                                <TextBlock Text="[Chart placeholder]" Foreground="#777"/>
-                            </StackPanel>
+                            <chrt:ChartWrapper ChartViewModel="{Binding StrandTotalChart}"/>
                         </Border>
                     </Grid>
                 </TabItem>
@@ -227,3 +227,4 @@
         </Border>
     </Grid>
 </Window>
+

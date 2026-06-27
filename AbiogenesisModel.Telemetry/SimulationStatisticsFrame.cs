@@ -8,6 +8,8 @@ public class SimulationStatisticsFrame
 
     public long Tick { get; }
 
+    public DateTime Timestamp { get; } = DateTime.UtcNow;
+
     public SimulationStatisticsFrame(long tick, IEnumerable<ISimulationStatistic> statistics)
     {
         Tick = tick;

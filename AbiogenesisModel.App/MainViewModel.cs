@@ -1,4 +1,6 @@
-﻿using AbiogenesisModel.Telemetry;
+﻿using AbiogenesisModel.App.Chart;
+using AbiogenesisModel.App.Statistics;
+using AbiogenesisModel.Telemetry;
 using AbiogenesisModel.Telemetry.Statistics;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +11,8 @@ namespace AbiogenesisModel.App;
 
 public sealed class MainViewModel : INotifyPropertyChanged
 {
+    private readonly IStatisticsHistoryStore _historyStore;
+
     private CancellationTokenSource? _cancellationTokenSource;
 
     private SimulationSession? _simulationSession;
@@ -35,6 +39,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public MainViewModel()
     {
+        _historyStore = new StatisticsHistoryStore();
+
         ConfigurationFile = "config.yml";
         OutputDirectory = "runs/run-001";
 
@@ -53,6 +59,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         UpdateStatus();
         UpdateCommandsState();
+        UpdateCharts();
     }
 
     public string ConfigurationFile { get; set; }
@@ -118,6 +125,10 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     public ObservableCollection<string> LogMessages { get; } = [];
 
+    public IBaseStatisticChartViewModel StrandLengthDistributionChart { get; } = new StrandLengthDistributionViewModel();
+
+    public IBaseStatisticChartViewModel StrandTotalChart { get; } = new StrandTotalOverTimeViewModel();
+
     public bool LoadCommandEnabled
     {
         get => _loadCommandEnabled;
@@ -168,6 +179,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
         UpdateStatus();
         UpdateCommandsState();
+        UpdateCharts();
     }
 
     private async Task RunAsync()
@@ -193,7 +205,7 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
             _simulationSession!.ReportEveryTicks = reportEveryTicks;
 
-            var maxTicksPerSecond = 10;
+            const int maxTicksPerSecond = 10;
 
             LogMessages.Add("Simulation started");
             await _simulationSession!.RunAsync(maxTicks, maxTicksPerSecond, progress, _cancellationTokenSource.Token);
@@ -219,6 +231,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
 
     private void ApplyFrame(SimulationStatisticsFrame frame)
     {
+        _historyStore.AddFrame(frame);
+
         CurrentTick = frame.Tick;
 
         if (frame.TryGet<StrandStatistic>(out var strands))
@@ -235,6 +249,8 @@ public sealed class MainViewModel : INotifyPropertyChanged
         {
             Nucleotides = nucleotides.TotalCount;
         }
+
+        UpdateCharts();
     }
 
     private void Pause()
@@ -259,28 +275,15 @@ public sealed class MainViewModel : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (Equals(field, value))
         {
-            return false;
+            return;
         }
 
         field = value;
         OnPropertyChanged(propertyName);
-        return true;
-    }
-
-    private bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
-    {
-        if (Equals(field, newValue))
-        {
-            return false;
-        }
-
-        field = newValue;
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        return true;
     }
 
     private void UpdateStatus()
@@ -295,5 +298,21 @@ public sealed class MainViewModel : INotifyPropertyChanged
         PauseCommandEnabled = _simulationSession is { CurrentState: SimulationSession.State.Running };
         StopCommandEnabled = _simulationSession is { CurrentState: SimulationSession.State.Running or SimulationSession.State.Paused };
         SaveSnapshotCommandEnabled = _simulationSession is { CurrentState: SimulationSession.State.Paused };
+    }
+
+    private void UpdateCharts()
+    {
+        var strandSeries = _historyStore.GetSeries<StrandStatistic>();
+
+        if (strandSeries.Any())
+        {
+            StrandLengthDistributionChart.TryToUpdate(strandSeries);
+            StrandTotalChart.TryToUpdate(strandSeries);
+        }
+        else
+        {
+            StrandLengthDistributionChart.Clear();
+            StrandTotalChart.Clear();
+        }
     }
 }
